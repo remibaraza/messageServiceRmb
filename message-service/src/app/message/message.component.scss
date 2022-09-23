@@ -1,0 +1,138 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.container {
+  box-shadow: lightgray 10px 4px 50px;
+  box-sizing: border-box;
+  width: 720px;
+  height: 600px;
+  margin: 120px auto;
+  border-radius: 30px;
+  position: relative;
+  overflow: hidden;
+  background-color: #FFFFFF;
+}
+
+h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: green;
+}
+
+.container img {
+  //margin-bottom: 20px;
+  margin-left: 280px;
+  margin-top: 50px;
+}
+
+.container form {
+  width: 560px;
+  position: absolute;
+  top: 150px;
+  left: 60px;
+  transition: 0.5s;
+}
+
+form input {
+  width: 50%;
+  font-family: inherit;
+  font-size: inherit;
+  height: 30px;
+  padding: 10px 5px;
+  margin: 5px 160px 25px;
+  border: 3px solid green;
+  border-radius: 15px;
+
+}
+
+
+.labels {
+  width: 50%;
+  padding: 10px 10px;
+  cursor: text;
+  margin: 20px 160px 25px;
+  color: green;
+}
+
+
+::placeholder {
+  color: gray;
+  font-style: oblique;
+}
+
+.btn-box {
+  width: 100%;
+  margin: 30px auto;
+  text-align: center;
+}
+
+form button {
+  width: 25%;
+  height: 50px;
+  //margin: 80px 40px;
+  margin-left: 50px;
+  margin-top: 0;
+  background-color: #0E813F;
+  border-radius: 40px;
+  border: 0;
+  outline: none;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+#form2 {
+  left: 770px;
+}
+
+#form3 {
+  left: 770px;
+}
+
+.step-row {
+  width: 720px;
+  height: 40px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 -1px;
+  position: relative;
+
+
+}
+
+small {
+  color: white;
+}
+
+.step-col {
+  width: 240px;
+  text-align: center;
+  color: #333;
+  position: relative;
+}
+
+#progress {
+  position: absolute;
+  transition: 1s;
+  height: 100%;
+  width: 240px;
+  background: linear-gradient(to right, darkgreen, greenyellow);
+}
+
+#progress::after {
+  content: '';
+  height: 0;
+  width: 0;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  position: absolute;
+  right: -20px;
+  top: 0;
+  border-left: 20px solid greenyellow;
+
+}
+

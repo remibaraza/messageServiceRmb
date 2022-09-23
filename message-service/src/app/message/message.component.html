@@ -1,0 +1,77 @@
+<div #card class="container" id="card"> <!--xmlns="http://www.w3.org/1999/html"-->
+
+  <form #form1 id="form1">
+    <label class="labels" for="referenceInput">Order reference</label>
+    <input (keypress)="onReferenceInputKeyPressed()" [(ngModel)]="reference" id="referenceInput" list="refs" name="hey"
+           placeholder="Starting with RIS..."
+           type="text">
+    <datalist id="refs"></datalist>
+    <div class="btn-box">
+      <button #next1 (click)="next1OnClick()" id="next1">Next</button>
+    </div>
+
+  </form>
+  <form id="form2">
+    <label class="labels" for="customer">Customer</label>
+    <input [(ngModel)]="customer" id="customer" name="customer" type="text">
+    <label class="labels" for="referenceTypeId">Type of message</label>
+    <input #choices (input)="onChooseReferenceType()" [(ngModel)]="referenceType" id="referenceTypeId"
+           list="choices"
+           name="hey"
+           placeholder="Choose..." required type="text"/>
+    <datalist id="choices">
+      <option>Response</option>
+      <option>Error</option>
+      <option>StatusInformation</option>
+      <option>ErrorMessage</option>
+      <option>Deletion</option>
+    </datalist>
+    <div class="btn-box">
+      <button (click)="back2OnClick()" id="back2" type="button">Back</button>
+      <button (click)="next2OnClick()" id="next2" type="button">Next</button>
+    </div>
+  </form>
+  <form id="form3">
+    <label class="labels" for="responseIdInput" id="labelReponseId">Status and Message reference</label>
+    <input [(ngModel)]="responseId" id="responseIdInput"
+           list="messagesId" name="responseId" placeholder="Choose...">
+    <datalist id="messagesId"></datalist>
+    <label class="labels" for="containerid">Container Id</label>
+    <input [(ngModel)]="containerId" id="containerid" name="containerId"
+           type="text">
+    <label class="labels" for="detailsId" id="labelDetailsNoDetails">Add Details ?</label>
+    <input (input)="onChooseDetailsNoDetails()" [(ngModel)]="details" id="detailsId" list="choices1" name="details"
+           placeholder="Choose..."
+           type="text"/>
+    <datalist id="choices1">
+      <option>Details</option>
+      <option>No details</option>
+    </datalist>
+    <label class="labels" for="qualifierId" id="qualifierLabelId">Qualifier Id </label>
+    <input [(ngModel)]="qualifier" id="qualifierId" name="qualifier"
+           type="text">
+    <label class="labels" for="codeID" id="codeLabelId">Code</label>
+    <input [(ngModel)]="code" id="codeID" name="code" type="text">
+    <label class="labels" for="rTime" id="labelReceiptTime">Receipt time</label>
+    <input #receipt [(ngModel)]="receiptTime" id="rTime" name="receiptTime" onfocus="(this.type='date')"
+           type="text">
+    <div class="btn-box">
+      <button (click)="back3OnClick()" id="back3" type="button">Back</button>
+      <button (click)="oncClickSendButton()">Send</button>
+    </div>
+  </form>
+  <div class="step-row">
+    <div id="progress"></div>
+    <div class="step-col"><small>Reference</small></div>
+    <div class="step-col"><small>Customer and Message Type</small></div>
+    <div class="step-col"><small>Details and Send</small></div>
+
+
+  </div>
+  <img src="../../assets/rmb.png" width="150px">
+  <button class="back"></button>
+
+
+  <label [textContent]="error"></label>
+</div>
+
