@@ -51,15 +51,15 @@ export class MessageComponent {
         detailsArr.push(ac03Details);
         ac03StatusMessage = {
           customer: this.customer,
-          exchangeNo: "004UE5ZYBE21LC",
+          exchangeNo: this.generateExchangeNo(),
           sender: "BOXB",
           receiver: "RAILMYBOX",
           creationTs: new Date().toISOString(),
           referenceType: this.referenceType,
-          referenceNo: "637610330958933600",
+          referenceNo: this.generateReferenceNo(),
           reference: this.reference,
           containerId: this.containerId,
-          production: "Hey this is a test",
+          production: "",
           statusDetails: detailsArr
         }
         this.apiService.postAc03Message(ac03StatusMessage);
@@ -69,13 +69,13 @@ export class MessageComponent {
         let ac03ResponseMessage !: AC03Response;
         ac03ResponseMessage = {
           creationTs: this.creationTS,
-          exchangeNo: "004UE5ZYBE21LC",
+          exchangeNo: this.generateExchangeNo(),
           receiptTime: new Date().toISOString(),
           receiver: "RAILMYBOX",
-          referenceNo: "637610330958933600",
+          referenceNo: this.generateReferenceNo(),
           referenceType: this.referenceType,
           sender: this.sender,
-          text: "hey",
+          text: "",
           responseId: this.responseId
         }
         this.apiService.postAc03Message(ac03ResponseMessage)
@@ -161,20 +161,27 @@ export class MessageComponent {
   }
 
   next1OnClick() {
+
     this.error = ''
+    let customerInput = document.getElementById('customer')
     const form1 = document.getElementById('form1');
     const form2 = document.getElementById('form2');
     const prog = document.getElementById('progress')
     if (form1 != null && form2 != null && prog != null) {
-      form1.style.left = '-470px';
-      form2.style.left = '40px'
-      prog.style.width = "480px"
+      form1.style.left = '-1000px';
+      form2.style.left = '625px'
+      prog.style.width = "1266px"
     }
     this.apiService.getOrders(this.reference).subscribe(data => {
       this.customer = data[0].customerName || ''
+      console.log(this.customer)
+      console.log(data[0].containerId);
+
       this.containerId = data[0].containerId || ''
       this.orderDispoId = data[0].id || ''
     });
+
+
   }
 
   next2OnClick() {
@@ -184,9 +191,9 @@ export class MessageComponent {
     const container = document.getElementById('card')
 
     if (form3 != null && form2 != null && prog != null && container != null) {
-      form2.style.left = '-470px';
-      form3.style.left = '40px'
-      prog.style.width = "720px"
+      form2.style.left = '-1000px';
+      form3.style.left = '625px'
+      prog.style.width = "1900px"
       container.style.overflowY = "scroll";
     }
     this.onResponseIdKeyPressed();
@@ -197,9 +204,9 @@ export class MessageComponent {
     const form2 = document.getElementById('form2');
     const prog = document.getElementById('progress')
     if (form1 != null && form2 != null && prog != null) {
-      form1.style.left = '40px';
-      form2.style.left = '770px'
-      prog.style.width = "240px"
+      form1.style.left = '625px';
+      form2.style.left = '2000px'
+      prog.style.width = "633px"
     }
   }
 
@@ -209,9 +216,9 @@ export class MessageComponent {
     const prog = document.getElementById('progress')
     const container = document.getElementById('card')
     if (form3 != null && form2 != null && prog != null && container != null) {
-      form2.style.left = '40px';
-      form3.style.left = '770px'
-      prog.style.width = "480px"
+      form2.style.left = '625px';
+      form3.style.left = '2000px'
+      prog.style.width = "1266px"
       container.style.overflowY = '';
     }
   }
@@ -267,6 +274,24 @@ export class MessageComponent {
       })
     }
 
+  }
+
+  generateExchangeNo(): string {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    let result = ' ';
+    const length = characters.length;
+    for (let i = 0; i < 12; i++)
+      result += characters.charAt(Math.floor(Math.random() * length))
+    return result;
+
+  }
+
+  generateReferenceNo(): string {
+    const characters = "0123456789"
+    let result = ' '
+    for (let i = 0; i < 18; i++)
+      result += characters.charAt(Math.floor(Math.random() * 10))
+    return result;
   }
 
 
