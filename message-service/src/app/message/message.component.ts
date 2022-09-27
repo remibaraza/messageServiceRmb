@@ -1,5 +1,4 @@
-import {Component, ElementRef, Input, ViewChild} from "@angular/core";
-import {MessageModel} from "../models/message.model";
+import {Component, ViewChild} from "@angular/core";
 import {AC03MessageModel} from "@railmybox/api-dispo";
 import {freeApiService} from "../services/freeApiService";
 import {Ac03status} from "../classes/ac03status";
@@ -15,9 +14,8 @@ import ReferenceTypeEnum = AC03MessageModel.ReferenceTypeEnum;
 })
 export class MessageComponent {
 
+
   error!: string;
-  @Input()
-  messageModel!: MessageModel
   sender!: string;
   customer !: string;
   creationTS!: string;
@@ -30,13 +28,14 @@ export class MessageComponent {
   qualifier !: string;
   code !: string;
   details ?: string;
+  info ?: string;
   orderDispoId !: string;
+  showDiv !: boolean
   statusDetails ?: Array<AC03StatusDetail>;
+  hideStyle = 'display: none'
+  showStyle = 'display: inline'
 
-  @ViewChild('receipt') inputReceiptTime !: ElementRef;
-  @ViewChild('next1') next1 !: ElementRef;
-  @ViewChild('form1') form1 !: ElementRef;
-  @ViewChild('card') card !: ElementRef;
+  @ViewChild('card') container !: HTMLElement
 
 
   constructor(public apiService: freeApiService) {
@@ -65,39 +64,48 @@ export class MessageComponent {
         this.apiService.postAc03Message(ac03StatusMessage);
         break;
       case "Response":
-      case "Error":
         let ac03ResponseMessage !: AC03Response;
         ac03ResponseMessage = {
           creationTs: this.creationTS,
-          exchangeNo: this.generateExchangeNo(),
+          exchangeNo: "004UE5ZYBE21LC",
           receiptTime: new Date().toISOString(),
           receiver: "RAILMYBOX",
-          referenceNo: this.generateReferenceNo(),
+          referenceNo: "637610330958933600",
           referenceType: this.referenceType,
-          sender: this.sender,
+          sender: "BOXB",
           text: "",
           responseId: this.responseId
         }
         this.apiService.postAc03Message(ac03ResponseMessage)
+        break;
+      case "Error":
+        this.apiService.postAc03Message({
+          creationTs: this.creationTS,
+          exchangeNo: this.generateExchangeNo(),
+          receiver: "RAILMYBOX",
+          referenceNo: this.generateReferenceNo(),
+          referenceType: this.referenceType,
+          sender: "BOXB"
+        });
+        break;
     }
   }
 
   /*                  ---                           */
 
-  /* HTML actions */
+
   onResponseIdKeyPressed() {
     let refs = new Array<String | undefined>;
-
-
     this.apiService.getCommunicationFromOrder(this.orderDispoId).subscribe(data => {
       data.forEach(function (v) {
         console.log(data);
-        let tmp = String(v.statusType)
-        let tmp2 = String(v.date)
-        let res = tmp + " " + tmp2;
+        let statusType = String(v.statusType)
+        let receivedOn = String(v.date)
+
+        let res = statusType + " from " + receivedOn.substring(0, 10) + " at " + receivedOn.substring(11, 19);
         refs.push(res)
       })
-      var str = ''
+      let str = ''
       refs.forEach(function (v) {
         if (typeof v === "string") {
           str += '<option value="' + v + '" />';
@@ -145,7 +153,6 @@ export class MessageComponent {
 
       }
     } else {
-      console.log("None")
       if (receipt && responseId && detailsChoice && labelResponseId && labelDetailsNoDetails && labelReceiptTime) {
         labelReceiptTime.style.display = "inline"
         receipt.style.display = "inline";
@@ -172,16 +179,17 @@ export class MessageComponent {
       form2.style.left = '625px'
       prog.style.width = "1266px"
     }
-    this.apiService.getOrders(this.reference).subscribe(data => {
-      this.customer = data[0].customerName || ''
-      console.log(this.customer)
-      console.log(data[0].containerId);
+    if (this.reference) {
+      this.apiService.getOrders(this.reference).subscribe(data => {
+        this.customer = data[0].customerName || ''
+        console.log(this.customer)
+        console.log(data[0].containerId);
 
-      this.containerId = data[0].containerId || ''
-      this.orderDispoId = data[0].id || ''
-    });
+        this.containerId = data[0].containerId || ''
+        this.orderDispoId = data[0].id || ''
+      });
 
-
+    }
   }
 
   next2OnClick() {
@@ -196,7 +204,8 @@ export class MessageComponent {
       prog.style.width = "1900px"
       container.style.overflowY = "scroll";
     }
-    this.onResponseIdKeyPressed();
+    if (this.referenceType == "Response")
+      this.onResponseIdKeyPressed();
   }
 
   back2OnClick() {
@@ -251,14 +260,23 @@ export class MessageComponent {
   onReferenceInputKeyPressed() {
     let refs = new Array<String | undefined>;
     const inputReference = document.getElementById('referenceInput')
+    let loading = document.getElementById('loading')
+    let img = document.getElementById('logo')
     if (inputReference) {
       inputReference.addEventListener("keypress", (e) => {
-        if (this.reference && this.reference.length >= 2) {
+        if (img && loading && this.reference && this.reference.length >= 2) {
+          loading.style.display = "inline";
+          img.style.display = "none"
           this.apiService.getOrders(this.reference).subscribe(data => {
             data.forEach(function (v) {
-              let tmp = String(v.reference)
-              refs.push(tmp)
-            })
+                let tmp = String(v.reference)
+                refs.push(tmp)
+              }
+            )
+            if (loading)
+              loading.style.display = "none"
+            if (img)
+              img.style.display = "inline"
             var str = ''
             refs.forEach(function (v) {
               if (typeof v === "string") {
@@ -278,7 +296,7 @@ export class MessageComponent {
 
   generateExchangeNo(): string {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    let result = ' ';
+    let result = '';
     const length = characters.length;
     for (let i = 0; i < 12; i++)
       result += characters.charAt(Math.floor(Math.random() * length))
@@ -288,11 +306,14 @@ export class MessageComponent {
 
   generateReferenceNo(): string {
     const characters = "0123456789"
-    let result = ' '
+    let result = ''
     for (let i = 0; i < 18; i++)
       result += characters.charAt(Math.floor(Math.random() * 10))
     return result;
   }
 
+  displayLoading(): void {
+
+  }
 
 }

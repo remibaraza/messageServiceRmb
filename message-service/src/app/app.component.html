@@ -1,3 +1,2 @@
 <app-header></app-header>
-<h1>{{interval | async}}</h1>
-<app-message *ngFor="let m of myMessage" [messageModel]="m"></app-message>
+<app-message>{{this.myMessage}}</app-message>

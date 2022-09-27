@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
     test: 'my content'
   }
   interval ?: Observable<string>
-  myMessage !: MessageModel[];
+  myMessage !: MessageModel;
   private url = "https://api.dev.railmybox.io"
 
   constructor(private _freeApiService: freeApiService, private messageService: ServiceMessage, public oidcSecurityService: OidcSecurityService

@@ -2,12 +2,13 @@
 
   <form #form1 id="form1">
     <label class="labels" for="referenceInput">Order reference</label>
-    <input (keypress)="onReferenceInputKeyPressed()" [(ngModel)]="reference" id="referenceInput" list="refs" name="hey"
+    <input (keypress)="onReferenceInputKeyPressed()" [(ngModel)]="reference" id="referenceInput" list="refs"
+           name="reference  "
            placeholder="Starting with RIS..."
            type="text">
     <datalist id="refs"></datalist>
     <div class="btn-box">
-      <button #next1 (click)="next1OnClick()" id="next1">Next</button>
+      <button #next1 (click)="next1OnClick()" id="next1" ng-show="false">Next</button>
     </div>
 
   </form>
@@ -39,7 +40,7 @@
     <label class="labels" for="containerid">Container Id</label>
     <input [(ngModel)]="containerId" id="containerid" name="containerId"
            type="text">
-    <label class="labels" for="detailsId" id="labelDetailsNoDetails">Add Details ?</label>
+    <label class="labels" for="detailsId" id="labelDetailsNoDetails"></label>
     <input (input)="onChooseDetailsNoDetails()" [(ngModel)]="details" id="detailsId" list="choices1" name="details"
            placeholder="Choose..."
            type="text"/>
@@ -47,11 +48,38 @@
       <option>Details</option>
       <option>No details</option>
     </datalist>
+    <!--<label class="labels" for="chooseUpdateDispoOrderId">Update Order State</label>
+    <input (input)="onChooseUpdateDispoOrder()" [(ngModel)]="info" id="chooseUpdateDispoOrderId" list="infoOrderDL"
+           name="info"
+           placeholder="Choose...">
+    <datalist id="infoOrderDL">
+      <option>VERIFICATION</option>
+      <option>ACCEPTED</option>
+      <option>MISSING_DATA</option>
+      <option>DENIED</option>
+      <option>CANCELLED</option>
+      <option>DISPATCHED</option>
+      <option>BOOKING_CLOSED</option>
+      <option>TRANSPORT_PROBLEM</option>
+      <option>REBOOKING</option>
+      <option>DONE</option>
+      <option>REQUEST_CANCELLATION</option>
+      <option>REBOOKING_CANCELLED</option>
+      <option>ARRIVED</option>
+    </datalist>-->
     <label class="labels" for="qualifierId" id="qualifierLabelId">Qualifier Id </label>
-    <input [(ngModel)]="qualifier" id="qualifierId" name="qualifier"
-           type="text">
+    <input [(ngModel)]="qualifier" id="qualifierId" list="qualifierDL"
+           name="qualifier" placeholder="Choose..." type="text">
+    <datalist id="qualifierDL">
+      <option>STATUS</option>
+      <option>CTR_STATUS</option>
+    </datalist>
     <label class="labels" for="codeID" id="codeLabelId">Code</label>
-    <input [(ngModel)]="code" id="codeID" name="code" type="text">
+    <input [(ngModel)]="code" id="codeID" list="codeDL" name="code" placeholder="Choose..." type="text">
+    <datalist id="codeDL">
+      <option>FUTURE</option>
+      <option>NONE</option>
+    </datalist>
     <label class="labels" for="rTime" id="labelReceiptTime">Receipt time</label>
     <input #receipt [(ngModel)]="receiptTime" id="rTime" name="receiptTime" onfocus="(this.type='date')"
            type="text">
@@ -68,10 +96,14 @@
 
 
   </div>
-  <img src="../../assets/rmb2.png" width="250px">
+  <img id="logo" src="../../assets/rmb2.png" width="250px">
   <button class="back"></button>
+  <svg class="spinner" display="none" height="50px" id="loading" viewBox="0 0 66 66" width="50px"
+       xmlns="http://www.w3.org/2000/svg">
+    <circle class="path" cx="33" cy="33" fill="none" r="30" stroke-linecap="round" stroke-width="6"></circle>
+  </svg>
 
 
-  <label [textContent]="error"></label>
+  <label [textContent]="error" style="color: #0E813F"></label>
 </div>
 

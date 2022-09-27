@@ -12,11 +12,12 @@ import {MessageComponent} from './message/message.component';
 import {HeaderComponent} from './header/header.component';
 import {FormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {environment} from "../environments/environment";
 
 function apiConfigFactory() {
   return new Configuration({
     basePath: 'https://api.dev.railmybox.io/dispo',
-    credentials: {api_key: "ezmijCo2Sq0tnhF2wvWy93uhiczjtIh6EYOGnyjj"}
+    credentials: {api_key: environment.api_key}
   });
 }
 
