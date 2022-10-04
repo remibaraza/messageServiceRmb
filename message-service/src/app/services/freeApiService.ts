@@ -11,6 +11,8 @@ import {ServiceMessage} from "./servicemessage";
 import {Ac03} from "../classes/ac03";
 import {DispoOrderInfo} from "../classes/dispoOrderInfo";
 import {Observable} from "rxjs";
+import {AC03Response} from "../classes/aC03Response";
+import {Ac03status} from "../classes/ac03status";
 
 @Injectable()
 export class freeApiService {
@@ -21,8 +23,16 @@ export class freeApiService {
               public dispoService: DispoService) {
   }
 
-  postAc03Message(ac: Ac03): void {
-    this.externalService.processAc03Message(ac).subscribe();
+  postAc03Message(msg: Ac03): void {
+    this.externalService.processAc03Message(msg).subscribe();
+  }
+
+  postAc03ResponseMessage(msg: AC03Response): void {
+    this.externalService.processAc03Message(msg).subscribe();
+  }
+
+  postAc03StatusInformationMessage(msg: Ac03status): void {
+    this.externalService.processAc03Message(msg).subscribe();
   }
 
   getOrders(dispoReference: string): Observable<DispoOrderInfo[]> {

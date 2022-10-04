@@ -1,9 +1,8 @@
 import {Component, ViewChild} from "@angular/core";
 import {AC03MessageModel} from "@railmybox/api-dispo";
 import {freeApiService} from "../services/freeApiService";
-import {Ac03status} from "../classes/ac03status";
-import {AC03Response} from "../classes/aC03Response";
 import {AC03StatusDetail} from "../classes/aC03StatusDetail";
+import {Details} from "../classes/details";
 import ReferenceTypeEnum = AC03MessageModel.ReferenceTypeEnum;
 
 
@@ -14,6 +13,8 @@ import ReferenceTypeEnum = AC03MessageModel.ReferenceTypeEnum;
 })
 export class MessageComponent {
 
+
+  /* Attributes for Ac03 messages */
 
   error!: string;
   sender!: string;
@@ -30,25 +31,36 @@ export class MessageComponent {
   details ?: string;
   info ?: string;
   orderDispoId !: string;
-  showDiv !: boolean
+  qualiferAndCode !: string;
   statusDetails ?: Array<AC03StatusDetail>;
-  hideStyle = 'display: none'
-  showStyle = 'display: inline'
 
-  @ViewChild('card') container !: HTMLElement
+
+  @ViewChild('messageId') messageDataList !: any;
+  @ViewChild('detailsDL') detailsDataList !: any;
+  @ViewChild('referenceDataList') referenceDataList !: any;
+
+  /* Show-display variables */
+
+  showReceiptTime = true;
+  showResponseId = true;
+  showQualifier = true;
+  showImg = true;
+  showLoading = false;
+  showDetailsNoDetails = true;
+
+  /*HMLT elements */
 
 
   constructor(public apiService: freeApiService) {
   }
 
+  /* Send the right Ac03 message depends on the referenceType */
   oncClickSendButton() {
     switch (this.referenceType) {
       case "StatusInformation":
-        let ac03StatusMessage !: Ac03status;
         let detailsArr = new Array<AC03StatusDetail>;
-        let ac03Details = new AC03StatusDetail(this.qualifier, this.code, "Test", new Date().toISOString());
-        detailsArr.push(ac03Details);
-        ac03StatusMessage = {
+        detailsArr.push(new AC03StatusDetail(this.qualifier, this.code, "Test", new Date().toISOString()));
+        this.apiService.postAc03StatusInformationMessage({
           customer: this.customer,
           exchangeNo: this.generateExchangeNo(),
           sender: "BOXB",
@@ -60,23 +72,20 @@ export class MessageComponent {
           containerId: this.containerId,
           production: "",
           statusDetails: detailsArr
-        }
-        this.apiService.postAc03Message(ac03StatusMessage);
+        })
         break;
       case "Response":
-        let ac03ResponseMessage !: AC03Response;
-        ac03ResponseMessage = {
+        this.apiService.postAc03ResponseMessage({
           creationTs: this.creationTS,
-          exchangeNo: "004UE5ZYBE21LC",
+          exchangeNo: this.generateExchangeNo(),
           receiptTime: new Date().toISOString(),
           receiver: "RAILMYBOX",
-          referenceNo: "637610330958933600",
+          referenceNo: this.generateReferenceNo(),
           referenceType: this.referenceType,
           sender: "BOXB",
           text: "",
           responseId: this.responseId
-        }
-        this.apiService.postAc03Message(ac03ResponseMessage)
+        })
         break;
       case "Error":
         this.apiService.postAc03Message({
@@ -91,6 +100,7 @@ export class MessageComponent {
     }
   }
 
+  //KeyEvent
   /*                  ---                           */
 
 
@@ -98,79 +108,64 @@ export class MessageComponent {
     let refs = new Array<String | undefined>;
     this.apiService.getCommunicationFromOrder(this.orderDispoId).subscribe(data => {
       data.forEach(function (v) {
-        console.log(data);
-        let statusType = String(v.statusType)
-        let receivedOn = String(v.date)
-
-        let res = statusType + " from " + receivedOn.substring(0, 10) + " at " + receivedOn.substring(11, 19);
-        refs.push(res)
+        let optionForDatalist = String(v.statusType) + " from " + String(v.date).substring(0, 10) + " at " + String(v.date).substring(11, 19);
+        refs.push(optionForDatalist)
       })
-      let str = ''
+      let displayedDatalist = ''
       refs.forEach(function (v) {
         if (typeof v === "string") {
-          str += '<option value="' + v + '" />';
+          displayedDatalist += '<option value="' + v + '" />';
         }
       })
-      const responseIdChoice = document.getElementById('messagesId');
-      if (responseIdChoice) {
-        responseIdChoice.innerHTML = str;
-      }
+      this.referenceDataList.nativeElement.innerHTML = displayedDatalist;
     });
 
 
   }
 
   onChooseReferenceType() {
-    let receipt = document.getElementById("rTime");
-    let responseId = document.getElementById("responseIdInput");
-    let detailsChoice = document.getElementById("detailsId")
-    let labelDetailsNoDetails = document.getElementById("labelDetailsNoDetails")
-    let labelReceiptTime = document.getElementById("labelReceiptTime")
-    let codeInput = document.getElementById('codeID')
-    let labelCode = document.getElementById("codeLabelId")
-    let labelResponseId = document.getElementById("labelReponseId")
-    let qualifierInput = document.getElementById('qualifierId');
-    let labelQualifier = document.getElementById('qualifierLabelId')
 
-    if (codeInput && labelCode && qualifierInput && labelQualifier) {
-      codeInput.style.display = "none";
-      labelCode.style.display = "none";
-      qualifierInput.style.display = "none";
-      labelQualifier.style.display = "none";
-    }
+    this.showQualifier = false;
     if (this.referenceType == "StatusInformation") {
-      if (receipt && responseId && detailsChoice && labelDetailsNoDetails
-        && labelReceiptTime && labelResponseId) {
-        labelReceiptTime.style.display = "none"
-        receipt.style.display = "none";
+
+      this.showReceiptTime = false;
+      this.showResponseId = false;
+      this.showDetailsNoDetails = true;
 
 
-        responseId.style.display = "none";
-        labelResponseId.style.display = "none"
-
-        labelDetailsNoDetails.style.display = "inline"
-        detailsChoice.style.display = "inline";
-
-      }
     } else {
-      if (receipt && responseId && detailsChoice && labelResponseId && labelDetailsNoDetails && labelReceiptTime) {
-        labelReceiptTime.style.display = "inline"
-        receipt.style.display = "inline";
+      this.showReceiptTime = true;
+      this.showResponseId = true;
+      this.showDetailsNoDetails = false;
 
-        labelResponseId.style.display = "inline"
-        responseId.style.display = "inline";
-
-
-        labelDetailsNoDetails.style.display = "none"
-        detailsChoice.style.display = "none";
-      }
     }
+  }
+
+  onChooseDetailsNoDetails() {
+
+    if (this.details == "No details") {
+      this.showQualifier = false;
+
+    } else {
+      this.showQualifier = true;
+      let detailsQualifierCode = new Details(new Map<number, string[]>)
+      detailsQualifierCode.addDetails();
+      let displayedDataList = '';
+      for (let key of detailsQualifierCode.details.keys()) {
+        let qualiferCode = detailsQualifierCode.details.get(key);
+        if (qualiferCode != undefined)
+          displayedDataList += '<option value="' + qualiferCode[0] + " " + qualiferCode[1] + '"/>'
+
+      }
+      console.log(displayedDataList);
+
+      this.detailsDataList.nativeElement.innerHTML = displayedDataList;
+    }
+
   }
 
   next1OnClick() {
 
-    this.error = ''
-    let customerInput = document.getElementById('customer')
     const form1 = document.getElementById('form1');
     const form2 = document.getElementById('form2');
     const prog = document.getElementById('progress')
@@ -232,67 +227,41 @@ export class MessageComponent {
     }
   }
 
-  onChooseDetailsNoDetails() {
-    let codeElement = document.getElementById("codeID");
-    let qualifierElement = document.getElementById("qualifierId");
-    let labelQualifier = document.getElementById('qualifierLabelId');
-    let labelCode = document.getElementById('codeLabelId')
-    if (codeElement && qualifierElement && labelCode && labelQualifier) {
-      if (this.details == "No details") {
-
-        labelCode.style.display = "none";
-        codeElement.style.display = "none";
-
-        labelQualifier.style.display = "none";
-        qualifierElement.style.display = "none";
-
-      } else {
-
-        labelCode.style.display = "inline";
-        codeElement.style.display = "inline";
-
-        labelQualifier.style.display = "inline";
-        qualifierElement.style.display = "inline"
-      }
-    }
-  }
 
   onReferenceInputKeyPressed() {
     let refs = new Array<String | undefined>;
     const inputReference = document.getElementById('referenceInput')
-    let loading = document.getElementById('loading')
-    let img = document.getElementById('logo')
     if (inputReference) {
       inputReference.addEventListener("keypress", (e) => {
-        if (img && loading && this.reference && this.reference.length >= 2) {
-          loading.style.display = "inline";
-          img.style.display = "none"
+        if (this.reference && this.reference.length >= 2) {
+          this.showLoading = true;
+          this.showImg = false;
           this.apiService.getOrders(this.reference).subscribe(data => {
             data.forEach(function (v) {
                 let tmp = String(v.reference)
                 refs.push(tmp)
               }
             )
-            if (loading)
-              loading.style.display = "none"
-            if (img)
-              img.style.display = "inline"
-            var str = ''
+            this.showLoading = false;
+            this.showImg = true;
+            let optionForDataList = ''
             refs.forEach(function (v) {
               if (typeof v === "string") {
-                str += '<option value="' + v + '" />';
+                optionForDataList += '<option value="' + v + '" />';
               }
             })
             const referenceChoice = document.getElementById('refs');
             if (referenceChoice) {
-              referenceChoice.innerHTML = str;
+              referenceChoice.innerHTML = optionForDataList;
             }
           });
         }
       })
     }
-
   }
+
+
+  /*          ExchangeNo and ReferenceNo generators                   */
 
   generateExchangeNo(): string {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -316,4 +285,13 @@ export class MessageComponent {
 
   }
 
+  onChooseDetails() {
+    const qualifierAndCode = this.qualiferAndCode?.split(' ')
+    if (qualifierAndCode) {
+      this.qualifier = qualifierAndCode[0]
+      this.code = qualifierAndCode[1]
+    }
+    console.log("qualifier:" + this.qualifier + "code:" + this.code)
+
+  }
 }
