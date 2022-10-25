@@ -5,7 +5,7 @@ import {
   DispoOrderStatusTypeModel,
   DispoService,
   ExternalService,
-  HelpdeskService
+  HelpdeskService, TrainVisitService
 } from "@railmybox/api-dispo";
 import {ServiceMessage} from "./servicemessage";
 import {Ac03} from "../classes/ac03";
@@ -13,18 +13,31 @@ import {DispoOrderInfo} from "../classes/dispoOrderInfo";
 import {Observable} from "rxjs";
 import {AC03Response} from "../classes/aC03Response";
 import {Ac03status} from "../classes/ac03status";
+import {BookingInfoModel, BookingService} from "@railmybox/api-booking";
+import {GroupedBookingInfoModel} from "@railmybox/api-booking/model/models";
+import {DispoOrderInfoModel, TrainVisitModel} from "@railmybox/api-dispo/model/models";
 
 @Injectable()
 export class freeApiService {
 
-  private url = "https://api.dev.railmybox.io"
 
   constructor(private httpclient: HttpClient, public serviceMessage: ServiceMessage, public externalService: ExternalService, public helpdeskService: HelpdeskService,
-              public dispoService: DispoService) {
+              public dispoService: DispoService, public bookingService: BookingService,
+              public trainVisitService : TrainVisitService
+              ) {
   }
+
+  getTrainVisit():  Observable<TrainVisitModel[]>{
+    return this.trainVisitService.searchTrainVisits("ACTIVE",undefined,new Date().toISOString())
+  }
+  listBookings(): Observable<Array<GroupedBookingInfoModel>> {
+    return this.bookingService.listBookings('FUTURE', new Date().toISOString());
+  }
+
 
   postAc03Message(msg: Ac03): void {
     this.externalService.processAc03Message(msg).subscribe();
+
   }
 
   postAc03ResponseMessage(msg: AC03Response): void {
@@ -37,6 +50,11 @@ export class freeApiService {
 
   getOrders(dispoReference: string): Observable<DispoOrderInfo[]> {
     return this.dispoService.searchDispoOrders({bookingReference: dispoReference}, 2)
+
+  }
+
+  searchDispoOrders(): Observable<Array<DispoOrderInfoModel>>{
+    return this.helpdeskService.searchDispoOrders()
 
   }
 

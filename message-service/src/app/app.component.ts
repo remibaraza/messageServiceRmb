@@ -5,6 +5,7 @@ import {MessageModel} from "./models/message.model";
 import {ServiceMessage} from "./services/servicemessage";
 import {OidcSecurityService} from "angular-auth-oidc-client";
 import {Observable} from "rxjs";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-root',
@@ -18,10 +19,9 @@ export class AppComponent implements OnInit {
   }
   interval ?: Observable<string>
   myMessage !: MessageModel;
-  private url = "https://api.dev.railmybox.io"
 
   constructor(private _freeApiService: freeApiService, private messageService: ServiceMessage, public oidcSecurityService: OidcSecurityService
-    , public httpClient: HttpClient) {
+    , public httpClient: HttpClient,public matDialog: MatDialog) {
   }
 
   ngOnInit(): void {

@@ -1,0 +1,17 @@
+
+<img src="assets/rmb.png">
+<div #card class="container" id="mainDiv" xmlns="http://www.w3.org/1999/html">
+  <ul>
+    <li *ngFor="let date of this.nextDispoOrders | keyvalue: asInOrder">{{date.key}}
+
+      <div class="wagon" *ngFor="let tmp of date.value">
+        <button (click)="showDetailsClick(tmp.reference)"> {{tmp.customerName}}
+        </button>
+
+
+      </div>
+
+    </li>
+  </ul>
+
+</div>

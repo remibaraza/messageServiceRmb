@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AuthInterceptor, AuthModule, LogLevel} from 'angular-auth-oidc-client';
+import {MatDialog, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 
 
 import {AppComponent} from './app.component';
@@ -13,6 +14,9 @@ import {HeaderComponent} from './header/header.component';
 import {FormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {environment} from "../environments/environment";
+import { GraphicalDispositionComponent } from './graphical-disposition/graphical-disposition.component';
+import {AppRoutingModule} from "./app-routing.module";
+import { WagonDetailsComponent } from './wagon-details/wagon-details.component';
 
 function apiConfigFactory() {
   return new Configuration({
@@ -27,8 +31,12 @@ function apiConfigFactory() {
 
     MessageComponent,
     HeaderComponent,
+    GraphicalDispositionComponent,
+    WagonDetailsComponent
 
-
+  ],
+  entryComponents: [
+    WagonDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -36,6 +44,7 @@ function apiConfigFactory() {
     ),
     HttpClientModule,
     BrowserAnimationsModule,
+    MatDialogModule,
     FormsModule,
     AuthModule.forRoot({
       config: {
@@ -49,7 +58,8 @@ function apiConfigFactory() {
         useRefreshToken: true,
         logLevel: LogLevel.Debug,
         secureRoutes: [
-          'https://api.dev.railmybox.io/dispo'
+          'https://api.dev.railmybox.io/dispo',
+          'https://api.dev.railmybox.io/booking'
         ]
 
 

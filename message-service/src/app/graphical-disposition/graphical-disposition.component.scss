@@ -1,0 +1,236 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.container {
+  box-shadow: lightgray 10px 4px 50px;
+  box-sizing: border-box;
+  width: 1900px;
+  height: 600px;
+  margin: 120px auto;
+  position: relative;
+  overflow-y: auto;
+  background-color: #FFFFFF;
+}
+
+h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: green;
+}
+
+.container img {
+  //margin-bottom: 20px;
+  margin-left: 820px;
+  margin-top: 75px;
+}
+
+.container form {
+  width: 560px;
+  position: absolute;
+  top: 100px;
+  left: 625px;
+  transition: 0.5s;
+
+}
+
+form input {
+  width: 50%;
+  font-family: inherit;
+  font-size: inherit;
+  height: 30px;
+  padding: 10px 10px;
+  margin: 10px 160px 25px;
+  border: 3px solid green;
+  border-radius: 15px;
+
+}
+
+
+ .labels {
+  width: 50%;
+   display: block;
+  font-family: inherit;
+  height: 30px;
+  padding: 20px 10px;
+  margin: 30px 160px 25px;
+  border: 3px solid green;
+  border-radius: 15px;
+}
+
+
+::placeholder {
+  color: gray;
+  font-style: oblique;
+}
+
+.btn-box {
+  width: 100%;
+  margin: 30px auto;
+  text-align: center;
+}
+
+form button {
+  width: 25%;
+  height: 50px;
+  //margin: 80px 40px;
+  margin-left: 50px;
+  margin-top: 0;
+  background-color: #0E813F;
+  border-radius: 40px;
+  border: 0;
+  outline: none;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+#form2 {
+  left: 2000px;
+}
+
+#form3 {
+  left: 2000px;
+}
+
+.step-row {
+  width: 1900px;
+  height: 40px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 -1px;
+  position: relative;
+
+
+}
+
+small {
+  color: white;
+}
+
+.step-col {
+  width: 633px;
+  text-align: center;
+  color: #333;
+  position: relative;
+}
+
+#progress {
+  position: absolute;
+  transition: 1s;
+  height: 100%;
+  width: 633px;
+  background: linear-gradient(to right, darkgreen, greenyellow);
+}
+
+#progress::after {
+  content: '';
+  height: 0;
+  width: 0;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  position: absolute;
+  right: -20px;
+  top: 0;
+  border-left: 20px solid greenyellow;
+
+}
+
+$offset: 187;
+$duration: 1.4s;
+
+.spinner {
+  animation: rotator $duration linear infinite;
+  margin-left: 900px;
+  margin-top: 75px;
+}
+
+@keyframes rotator {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(270deg);
+  }
+}
+
+.path {
+  stroke-dasharray: $offset;
+  stroke-dashoffset: 0;
+  transform-origin: center;
+  animation: dash $duration ease-in-out infinite,
+  colors ($duration*4) ease-in-out infinite;
+}
+
+@keyframes colors {
+  0% {
+    stroke: green;
+  }
+  25% {
+    stroke: greenyellow;
+  }
+  50% {
+    stroke: darkgreen;
+  }
+  75% {
+    stroke: lawngreen;
+  }
+  100% {
+    stroke: limegreen;
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dashoffset: $offset;
+  }
+  50% {
+    stroke-dashoffset: $offset/4;
+    transform: rotate(135deg);
+  }
+  100% {
+    stroke-dashoffset: $offset;
+    transform: rotate(450deg);
+  }
+}
+
+ul li {
+
+  padding: 25px 20px 30px;
+
+  transition: .5s;
+  margin: 20px 100px 25px 25px;
+  border-radius: 5px;
+  border: 5px green solid;
+  color: black;
+  font-weight: bold;
+  list-style-type: none;
+
+
+}
+button{
+  background-color: black;
+  color: white;
+}
+
+.wagon{
+  background-color: forestgreen;
+  display: inline;
+  border-radius: 5px;
+  width: 50px;
+  margin: 90px;
+  padding: 20px;
+}
+ul li a{
+  color: white;
+}
+
+ul li:hover {
+  transform: scale(1.02);
+}
+
+
+

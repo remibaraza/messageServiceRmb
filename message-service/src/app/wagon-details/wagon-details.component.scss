@@ -1,0 +1,13 @@
+ul li {
+  padding: 10px 10px 10px;
+
+  list-style-type: none;
+  transition: .5s;
+  margin: 20px 100px 25px 25px;
+  border-radius: 5px;
+  border: 5px green solid;
+  color: black;
+}
+ul li:hover {
+  transform: scale(1.06);
+}
